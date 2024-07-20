@@ -14,8 +14,8 @@ services:
     name: backend
     env: node
     plan: free
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    buildCommand: cd back && npm install
+    startCommand: cd back && npm start
     envVars:
       - key: DATABASE_URL
         value: mongodb+srv://husslehard171298:Godspower17@tuniship.blpa469.mongodb.net/
