@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: frontend
+    env: node
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm run start
+    envVars:
+      - key: REACT_APP_API_URL
+        value: hhttps://tunishiprh.onrender.com
+    staticPublishPath: frontend/build
+
+  - type: web
+    name: backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: DATABASE_URL
+        value: mongodb+srv://husslehard171298:Godspower17@tuniship.blpa469.mongodb.net/
+      - key: JWT_SECRET
+        value: tuniship
