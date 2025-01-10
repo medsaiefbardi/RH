@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const cookieParser = require("cookie-parser");
 
 const employeeRoutes = require('./routes/employeeRoutes');
+const evaluationRoutes = require('./routes/evaluationRoutes');
 const skillRoutes = require('./routes/skillRoutes');
 const authRoutes = require('./routes/authRoutes');
 const jobPositionRoutes = require('./routes/jobPositionRoutes')
@@ -31,7 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/job-positions', jobPositionRoutes);
-
+app.use('/api/evaluation', evaluationRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
