@@ -41,20 +41,36 @@ exports.register = async (req, res) => {
   }
 };
 
+
 exports.login = async (req, res) => {
   const { name, password } = req.body;
+
+  console.log("Requête reçue :", req.body);
+
   try {
+    // Chercher l'utilisateur par son nom
     const employee = await Employee.findOne({ name });
     if (!employee) {
+      console.log("Utilisateur non trouvé :", name);
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
 
-    // Comparaison simple
+    console.log("Utilisateur trouvé :", employee);
+
+    // Comparaison du mot de passe (texte clair pour ce cas)
     if (password !== employee.password) {
+      console.log("Mot de passe incorrect pour :", name);
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ employeeId: employee._id, role: employee.role }, process.env.JWT_SECRET, { expiresIn: '3h' });
+    // Générer le token
+    const token = jwt.sign(
+      { employeeId: employee._id, role: employee.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '3h' }
+    );
+
+    console.log("Connexion réussie pour :", name);
 
     res.json({ token, role: employee.role });
   } catch (err) {
@@ -62,3 +78,7 @@ exports.login = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+
+
+
