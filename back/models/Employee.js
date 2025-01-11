@@ -10,6 +10,25 @@ const employeeSchema = new mongoose.Schema({
   password: { type: String, required: true },
   role: { type: String, enum: ['employee', 'hr_head'], required: true },
   jobPosition: { type: mongoose.Schema.Types.ObjectId, ref: 'JobPosition' },
+  evaluation: {
+    objectivesPerformance: [
+      {
+        objective: { type: String },
+        indicator: { type: String },
+        weight: { type: Number },
+      },
+    ],
+    objectivesCompetence: [
+      {
+        objective: { type: String },
+        indicator: { type: String },
+        weight: { type: Number },
+      },
+    ],
+    totalPerformance: { type: Number, default: 0 },
+    totalCompetence: { type: Number, default: 0 },
+    totalEvaluation: { type: Number, default: 0 },
+  },
   skills: [employeeSkillSchema]
 });
 

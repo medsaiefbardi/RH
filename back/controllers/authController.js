@@ -1,7 +1,5 @@
-const Employee = require('../models/Employee');
-const JobPosition = require('../models/JobPosition');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Employee = require('../models/Employee');
 
 exports.register = async (req, res) => {
   const { name, password, role, jobPosition } = req.body;
@@ -11,8 +9,6 @@ exports.register = async (req, res) => {
       return res.status(400).json({ msg: 'Employee already exists' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     let employee;
     if (role === 'employee') {
       const position = await JobPosition.findById(jobPosition);
@@ -21,7 +17,7 @@ exports.register = async (req, res) => {
       }
       employee = new Employee({
         name,
-        password: hashedPassword,
+        password, // Mot de passe en texte clair
         role,
         jobPosition,
         skills: position.requiredSkills.map(skill => ({ skill: skill.skill, level: 'N/A' }))
@@ -29,7 +25,7 @@ exports.register = async (req, res) => {
     } else {
       employee = new Employee({
         name,
-        password: hashedPassword,
+        password, // Mot de passe en texte clair
         role
       });
     }
@@ -53,16 +49,16 @@ exports.login = async (req, res) => {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
 
-    const isMatch = await bcrypt.compare(password, employee.password);
-    if (!isMatch) {
+    // Comparaison simple
+    if (password !== employee.password) {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ employeeId: employee._id , role :employee.role }, process.env.JWT_SECRET, { expiresIn: '3h' });
+    const token = jwt.sign({ employeeId: employee._id, role: employee.role }, process.env.JWT_SECRET, { expiresIn: '3h' });
 
-    res.json({ token });
+    res.json({ token, role: employee.role });
   } catch (err) {
-    console.error(err);
+    console.error("Erreur lors de la connexion :", err);
     res.status(500).send('Server error');
   }
 };
